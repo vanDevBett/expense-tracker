@@ -1,0 +1,5 @@
+DATABASE_URL=postgresql://postgres:password@db:5432/expenses
+SECRET_KEY=supersecretkey123
+DEBUG=True
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+FRONTEND_URL=http://localhost:5173
