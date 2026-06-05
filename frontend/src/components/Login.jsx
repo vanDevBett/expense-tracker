@@ -20,7 +20,7 @@ export default function Login({ onLogin }) {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Expense Tracker</h2>
+        <h2 style={styles.title}>Expense Tracker 💰</h2>
         <p style={styles.subtitle}>Sign in to your account</p>
         {error && <p style={styles.error}>{error}</p>}
         <form onSubmit={handleSubmit}>
