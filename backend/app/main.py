@@ -32,3 +32,8 @@ app.include_router(expenses_router, prefix="/expenses", tags=["expenses"])
 @app.get("/")
 def root():
     return {"message": "Expense Tracker API is running"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
