@@ -8,14 +8,26 @@ export default function Dashboard({ token, onLogout }) {
   const [expenses, setExpenses] = useState([]);
   const [summary, setSummary] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [wakingUp, setWakingUp] = useState(false);
 
   const loadData = async () => {
-    const [expRes, sumRes] = await Promise.all([
-      expenseService.getAll(),
-      expenseService.getSummary()
-    ]);
-    setExpenses(expRes.data);
-    setSummary(sumRes.data);
+    try {
+      setLoading(true);
+      const timer = setTimeout(() => setWakingUp(true), 3000);
+      const [expRes, sumRes] = await Promise.all([
+        expenseService.getAll(),
+        expenseService.getSummary()
+      ]);
+      clearTimeout(timer);
+      setWakingUp(false);
+      setExpenses(expRes.data);
+      setSummary(sumRes.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { loadData(); }, []);
@@ -33,10 +45,24 @@ export default function Dashboard({ token, onLogout }) {
 
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
+  if (loading) {
+    return (
+      <div style={styles.loadingContainer}>
+        <div style={styles.spinner}></div>
+        {wakingUp && (
+          <div style={styles.wakingUp}>
+            <p style={styles.wakingText}>⏳ Waking up the server...</p>
+            <p style={styles.wakingSubtext}>Free tier servers sleep when inactive. This may take up to 30 seconds.</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.title}>Expense Tracker</h1>
+        <h1 style={styles.title}>💸 Expense Tracker</h1>
         <button style={styles.logoutBtn} onClick={onLogout}>Logout</button>
       </div>
 
@@ -83,5 +109,16 @@ const styles = {
   section: { background: "white", borderRadius: "8px", padding: "20px", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" },
   sectionHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" },
   sectionTitle: { margin: 0, fontSize: "18px" },
-  addBtn: { padding: "8px 16px", background: "#4f46e5", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" }
+  addBtn: { padding: "8px 16px", background: "#4f46e5", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" },
+  loadingContainer: { display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", gap: "24px" },
+  spinner: {
+    width: "48px", height: "48px",
+    border: "4px solid #f0f0f0",
+    borderTop: "4px solid #4f46e5",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite"
+  },
+  wakingUp: { textAlign: "center", maxWidth: "320px" },
+  wakingText: { margin: "0 0 8px", fontSize: "16px", fontWeight: "500" },
+  wakingSubtext: { margin: 0, fontSize: "13px", color: "#888" }
 };
