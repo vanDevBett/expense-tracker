@@ -2,6 +2,17 @@
 
 Fullstack expense tracking app built with FastAPI and React.
 
+## Live Demo
+
+Frontend: expense-tracker-gamma-hazel.vercel.app
+
+API: https://expense-tracker-production-b449.up.railway.app
+
+Docs: https://expense-tracker-production-b449.up.railway.app/docs
+
+> **Note:** Backend hosted on Railway's free tier.
+> First request may take a few seconds to respond.
+
 ## Tech Stack
 
 ### Backend
